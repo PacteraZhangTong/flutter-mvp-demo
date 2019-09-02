@@ -39,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> implements View{
 
   CreatGuestPresenter _presenter;
+
   LoadingView loading = LoadingView();
 
   void _incrementCounter() {
@@ -49,18 +50,30 @@ class _MyHomePageState extends State<MyHomePage> implements View{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+        appBar: AppBar(
+          title: Text('Mvp Demo'),
+        ),
+        body: Center(
+          child: RaisedButton(
+            child: Text('Mvp Demo'),
+            onPressed: () {
+              _presenter.creatGuestUser();
+            },
+          ),
+        )
     );
   }
 
   @override
   void creatGuestUserSuccess() {
-    // TODO: implement creatGuestUserSuccess
+    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("成功")));
   }
 
 
   @override
   void oncreatGuestUserError() {
-    // TODO: implement oncreatGuestUserError
+    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("Error")));
   }
 
   @override
