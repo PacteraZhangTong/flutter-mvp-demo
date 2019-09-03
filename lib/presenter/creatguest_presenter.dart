@@ -1,25 +1,23 @@
+import 'package:minefocus_base_flutter/minefocus_base_flutter.dart';
+
 import '../creatguest_contract.dart';
-import '../data_manager.dart';
+
 
 class CreatGuestPresenter implements Presenter {
-  View _view;
+  View view;
 
-  DataManager _dataManager;
-
-  CreatGuestPresenter(this._view) {
-    _view.setPresenter(this);
-  }
+  CreatGuestPresenter(this.view);
 
   @override
-  creatGuestUser() {
-    _dataManager.creatGuestUser((result) {
-      _view.showLoadin();
+  creatGuestUser()  {
+    view.showLoadin();
+    CreateGuest().request().then((result){
       if (result.success) {
-        _view.hideLoading();
-        _view.creatGuestUserSuccess();
+        view.hideLoading();
+        view.creatGuestUserSuccess();
       } else {
-        _view.hideLoading();
-        _view.oncreatGuestUserError();
+        view.hideLoading();
+        view.oncreatGuestUserError();
       }
     });
   }

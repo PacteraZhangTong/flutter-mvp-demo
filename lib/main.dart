@@ -4,11 +4,16 @@ import 'package:minefocus_base_flutter/minefocus_base_flutter.dart';
 
 import 'creatguest_contract.dart';
 import 'loading_view.dart';
+import 'main.reflectable.dart';
 
 void main() {
-  MinefocusBase.shared().config('https://awabank-server-api-stg.scsk-api.minefocus.jp/api/v1');
+  initializeReflectable();
+  MinefocusBase.shared()
+      .config('https://awabank-server-api-stg.scsk-api.minefocus.jp/api/v1');
   runApp(MyApp());
 }
+
+final _memberSymbolMap = null;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,65 +32,89 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-
   final String title;
-
-
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> implements View{
-
-  CreatGuestPresenter _presenter;
-
+class _MyHomePageState extends State<MyHomePage> implements View {
   LoadingView loading = LoadingView();
 
   void _incrementCounter() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    CreatGuestPresenter presenter = new CreatGuestPresenter(this);
 
+    return Scaffold(
         appBar: AppBar(
           title: Text('Mvp Demo'),
         ),
         body: Center(
           child: RaisedButton(
-            child: Text('Mvp Demo'),
+            child: Text('获取JWT'),
             onPressed: () {
-              _presenter.creatGuestUser();
+              presenter.creatGuestUser();
             },
           ),
-        )
-    );
+        ));
   }
 
   @override
   void creatGuestUserSuccess() {
-    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("成功")));
+    showDialog<Null>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('请求成功'),
+          content: new SingleChildScrollView(),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('确定'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    ).then((val) {
+      print(val);
+    });
   }
-
 
   @override
   void oncreatGuestUserError() {
-    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("Error")));
-  }
-
-  @override
-  setPresenter(Presenter presenter) {
-    _presenter = presenter as CreatGuestPresenter;
+    showDialog<Null>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('请求失败'),
+          content: new SingleChildScrollView(),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('确定'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    ).then((val) {
+      print(val);
+    });
   }
 
   @override
   hideLoading() {
     loading.dismiss(context);
   }
-
 
   @override
   showLoadin() {
